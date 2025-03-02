@@ -1,0 +1,126 @@
+enable algorithm-type scrypt secret <SECRET>
+username <USERNAME> algorithm-type scrypt secret <SECRET>
+
+line console 0
+ login local
+ exec-timeout 30
+ logging synchronous
+
+interface range g0/0/0, g0/1/0
+ ip address dhcp
+ no shutdown
+
+interface g0/0
+ ip address <IP_ADDRESS_1> <SUBNET_MASK>
+ no shutdown
+
+interface g0/1
+ ip address <IP_ADDRESS_2> <SUBNET_MASK>
+ no shutdown
+
+interface loopback 0
+ ip address <LOOPBACK_IP> <SUBNET_MASK>
+
+
+router ospf <OSPF_PROCESS_ID>
+ router-id <ROUTER_ID>
+ passive-interface <INTERFACE>
+
+interface <LOOPBACK_INTERFACE>
+ ip ospf <OSPF_PROCESS_ID> area <AREA_ID>
+
+interface range <INTERFACE_RANGE>
+ ip ospf <OSPF_PROCESS_ID> area <AREA_ID>
+ ip ospf network point-to-point
+
+
+ip dhcp excluded-address <EXCLUDED_RANGE_1_START> <EXCLUDED_RANGE_1_END>
+ip dhcp excluded-address <EXCLUDED_RANGE_2_START> <EXCLUDED_RANGE_2_END>
+ip dhcp excluded-address <EXCLUDED_RANGE_3_START> <EXCLUDED_RANGE_3_END>
+ip dhcp excluded-address <EXCLUDED_RANGE_4_START> <EXCLUDED_RANGE_4_END>
+ip dhcp excluded-address <EXCLUDED_RANGE_5_START> <EXCLUDED_RANGE_5_END>
+ip dhcp excluded-address <EXCLUDED_RANGE_6_START> <EXCLUDED_RANGE_6_END>
+ip dhcp excluded-address <EXCLUDED_RANGE_7_START> <EXCLUDED_RANGE_7_END>
+
+ip dhcp pool <POOL_A_PC>
+ network <NETWORK_A_PC> <SUBNET_A_PC>
+ default-router <DEFAULT_ROUTER_A_PC>
+ dns-server <DNS_SERVER>
+ domain-name <DOMAIN_NAME>
+
+ip dhcp pool <POOL_A_PHONE>
+ network <NETWORK_A_PHONE> <SUBNET_A_PHONE>
+ default-router <DEFAULT_ROUTER_A_PHONE>
+ dns-server <DNS_SERVER>
+ domain-name <DOMAIN_NAME>
+
+ip dhcp pool <POOL_B_MGMT>
+ network <NETWORK_B_MGMT> <SUBNET_B_MGMT>
+ default-router <DEFAULT_ROUTER_B_MGMT>
+ dns-server <DNS_SERVER>
+ domain-name <DOMAIN_NAME>
+ option 43 ip <OPTION_43_IP>
+
+ip dhcp pool <POOL_B_PC>
+ network <NETWORK_B_PC> <SUBNET_B_PC>
+ default-router <DEFAULT_ROUTER_B_PC>
+ dns-server <DNS_SERVER>
+ domain-name <DOMAIN_NAME>
+
+ip dhcp pool <POOL_B_PHONE>
+ network <NETWORK_B_PHONE> <SUBNET_B_PHONE>
+ default-router <DEFAULT_ROUTER_B_PHONE>
+ dns-server <DNS_SERVER>
+ domain-name <DOMAIN_NAME>
+
+ip dhcp pool <POOL_WIFI>
+ network <NETWORK_WIFI> <SUBNET_WIFI>
+ default-router <DEFAULT_ROUTER_WIFI>
+ dns-server <DNS_SERVER>
+ domain-name <DOMAIN_NAME>
+
+ip domain name <DOMAIN_NAME>
+ip name-server <DNS_SERVER_IP>
+
+ntp authentication-key <KEY_ID> md5 <SECRET>
+ntp trusted-key <KEY_ID>
+ntp server <NTP_SERVER_IP> key <KEY_ID>
+
+snmp-server community <SNMP_COMMUNITY> ro
+logging <LOGGING_SERVER_IP>
+logging trap debugging
+logging buffered 8192
+
+crypto key generate rsa
+ <KEY_SIZE>
+ip ssh version 2
+
+access-list <ACL_ID> permit <NETWORK> <WILDCARD_MASK>
+
+line vty 0 15
+ access-class <ACL_ID> in
+ transport input ssh
+ login local
+ logging synchronous
+
+no cdp run
+lldp run
+
+ipv6 unicast-routing
+
+interface g0/0/0
+ ipv6 address <IPv6_ADDRESS_1> <PREFIX_LENGTH>
+
+interface g0/1/0
+ ipv6 address <IPv6_ADDRESS_2> <PREFIX_LENGTH>
+
+interface g0/0
+ ipv6 address <IPv6_NETWORK_1>::/64 eui-64
+
+interface g0/1
+ ipv6 address <IPv6_NETWORK_2>::/64 eui-64
+
+
+
+
+
