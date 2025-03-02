@@ -1,3 +1,4 @@
+! Security & User Authentication
 enable secret <ENABLE_SECRET>
 username <USERNAME> secret <USER_SECRET>
 
@@ -6,20 +7,21 @@ line console 0
  exec-timeout 30
  logging synchronous
 
+! Network Infrastructure Configuration
+ip default-gateway <GATEWAY_IP>
+
+interface <VLAN_INTERFACE>
+ ip address <VLAN_IP> <SUBNET_MASK>
+
 interface range <INTERFACE_RANGE>
  switchport mode trunk
  switchport nonegotiate
  switchport trunk native vlan <NATIVE_VLAN>
  switchport trunk allowed vlan <ALLOWED_VLANS>
 
-ip default-gateway <GATEWAY_IP>
-
-interface <VLAN_INTERFACE>
- ip address <VLAN_IP> <SUBNET_MASK>
-
+! ARP Inspection Configuration
 ip arp inspection vlan <VLAN_LIST>
 ip arp inspection validate src-mac dst-mac ip
 
 interface range <INTERFACE_RANGE>
  ip arp inspection trust
-
