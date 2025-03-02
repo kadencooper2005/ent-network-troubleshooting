@@ -9,7 +9,8 @@
 Check interface status
 
     show ip interface brief
-    <img width="678" alt="image" src="https://github.com/user-attachments/assets/e4c541e6-9234-4c62-b951-7f8f7693d940" />
+<img width="678" alt="image" src="https://github.com/user-attachments/assets/1a0eaa3a-b949-4079-bbae-0bfda4c0ee0c" />
+
 
 
 If an interface is administratively down, enable it:
