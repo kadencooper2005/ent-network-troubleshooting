@@ -1,1 +1,41 @@
+### 📂 `vlan_issue.txt`  
+**Description:** VLAN misconfiguration causing communication failures.  
 
+```txt
+## 🛠 VLAN Connectivity Issue
+
+### ❌ Problem:
+PC1 and PC2, both in VLAN 10, cannot communicate.
+
+### 🔍 Troubleshooting Steps:
+1. Check VLAN assignments:
+   ```bash
+   show vlan brief
+   ```
+   - If VLAN 10 is missing, add it:
+     ```bash
+     vlan 10
+     name Engineering
+     ```
+
+2. Verify trunking on uplinks:
+   ```bash
+   show interfaces trunk
+   ```
+   - If VLAN 10 is not allowed, fix with:
+     ```bash
+     switchport trunk allowed vlan add 10
+     ```
+
+3. Ensure inter-VLAN routing is enabled (on L3 switch or router):
+   ```bash
+   show ip route
+   ```
+
+### ✅ Solution:
+- VLAN 10 was not allowed on the trunk link.
+- Fixed by adding VLAN 10 to the trunk using:
+  ```bash
+  switchport trunk allowed vlan add 10
+  ```
+```
