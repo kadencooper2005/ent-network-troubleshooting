@@ -17,4 +17,4 @@ Verify IPv6 routing
 
   If missing, enable:
 
-ipv6 unicast-routing
+    ipv6 unicast-routing
