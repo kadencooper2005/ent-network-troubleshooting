@@ -32,7 +32,7 @@ Check preempt settings (on the standby switch)
 
     show standby
 <img width="831" alt="image" src="https://github.com/user-attachments/assets/447e2edb-f26f-4d33-ae8c-0b7b9389a54e" />
-You can use show standby brief to print a summary of HSRP including Active and Standby groups, what VlAN they are in, group number etc. I have enabled preempt in groups 1 and 2 so they can reclaim their positions as Active switches when recovered from failure.
+You can use show standby brief to print a summary of HSRP including Active and Standby groups, what VLAN they are in, group number etc.
 
 
   If missing, enable:
