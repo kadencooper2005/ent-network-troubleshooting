@@ -1,1 +1,90 @@
+! Security & User Authentication
+enable secret <ENABLE_SECRET>
+username <USERNAME> secret <USER_SECRET>
 
+line console 0
+ login local
+ exec-timeout <TIMEOUT_VALUE>
+ logging synchronous
+
+line vty 0 15
+ access-class <ACL_ID> in
+ transport input ssh
+ login local
+ logging synchronous
+
+! Network Infrastructure Configuration
+ip default-gateway <GATEWAY_IP>
+
+interface <VLAN_INTERFACE>
+ ip address <VLAN_IP> <SUBNET_MASK>
+
+interface range <INTERFACE_RANGE>
+ switchport mode trunk
+ switchport nonegotiate
+ switchport trunk native vlan <NATIVE_VLAN>
+ switchport trunk allowed vlan <ALLOWED_VLANS>
+
+interface <INTERFACE>
+ switchport mode access
+ switchport nonegotiate
+ switchport access vlan <DATA_VLAN>
+ switchport voice vlan <VOICE_VLAN>
+
+interface range <INTERFACE_RANGE>
+ shutdown
+
+! Security & Spanning Tree Configuration
+switchport port-security
+ switchport port-security maximum <MAX_MAC_ADDRESSES>
+ switchport port-security mac-address sticky
+ switchport port-security violation <VIOLATION_MODE>
+
+interface <INTERFACE>
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+
+! DHCP Snooping & ARP Inspection
+ip dhcp snooping
+ip dhcp snooping vlan <VLAN_LIST>
+no ip dhcp snooping information option 
+
+interface range <INTERFACE_RANGE>
+ ip dhcp snooping trust
+
+interface <INTERFACE>
+ ip dhcp snooping limit rate <RATE_LIMIT>
+
+ip arp inspection vlan <VLAN_LIST>
+ip arp inspection validate src-mac dst-mac ip
+
+interface range <INTERFACE_RANGE>
+ ip arp inspection trust
+
+! Management & Logging Configuration
+ip domain-name <DOMAIN_NAME>
+ip name-server <DNS_SERVER_IP>
+
+logging <LOGGING_SERVER_IP>
+logging trap debugging
+logging buffered 8192
+
+ntp authentication-key <KEY_ID> md5 <NTP_SECRET>
+ntp trusted-key <KEY_ID>
+ntp server <NTP_SERVER_IP> key <KEY_ID>
+
+snmp-server community <SNMP_COMMUNITY> ro
+
+! SSH & Access Control
+crypto key generate rsa
+ <KEY_SIZE>
+ip ssh version 2
+
+access-list <ACL_ID> permit <NETWORK> <WILDCARD_MASK>
+
+! CDP & LLDP Configuration
+no cdp run
+lldp run
+
+interface <INTERFACE>
+ no lldp transmit
