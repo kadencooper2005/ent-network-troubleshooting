@@ -20,10 +20,12 @@ Diagnostic Steps & Fixes
     switchport access vlan 20
     int f0/2
     switchport mode access
+    switchport access voice vlan 20
     switchport access vlan 10
-  <img width="663" alt="image" src="https://github.com/user-attachments/assets/c7373723-f06a-4e2c-b1b8-c925b0dae117" />
+    
+  <img width="726" alt="image" src="https://github.com/user-attachments/assets/e08c85ad-209d-4802-87d0-7e25c2d02a95" />
 
-  when viewing the VLANS with show vlan brief, you can see that interface f0/1 in now in both VLAN 10 (PCs) and VLAN 20 (Phones)
+  when viewing the VLANS with show vlan brief, you can see that interface f0/1, f0/2 are now in both VLAN 10 (PCs) and VLAN 20 (Phones)
   
   If missing, create the VLAN:
 
