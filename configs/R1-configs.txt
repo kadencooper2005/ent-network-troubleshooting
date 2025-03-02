@@ -1,3 +1,4 @@
+! Security & User Authentication
 enable algorithm-type scrypt secret <SECRET>
 username <USERNAME> algorithm-type scrypt secret <SECRET>
 
@@ -6,6 +7,19 @@ line console 0
  exec-timeout 30
  logging synchronous
 
+line vty 0 15
+ access-class <ACL_ID> in
+ transport input ssh
+ login local
+ logging synchronous
+
+crypto key generate rsa
+ <KEY_SIZE>
+ip ssh version 2
+
+access-list <ACL_ID> permit <NETWORK> <WILDCARD_MASK>
+
+! Network Infrastructure Configuration
 interface range g0/0/0, g0/1/0
  ip address dhcp
  no shutdown
@@ -21,7 +35,7 @@ interface g0/1
 interface loopback 0
  ip address <LOOPBACK_IP> <SUBNET_MASK>
 
-
+! OSPF Routing Configuration
 router ospf <OSPF_PROCESS_ID>
  router-id <ROUTER_ID>
  passive-interface <INTERFACE>
@@ -33,7 +47,7 @@ interface range <INTERFACE_RANGE>
  ip ospf <OSPF_PROCESS_ID> area <AREA_ID>
  ip ospf network point-to-point
 
-
+! DHCP Configuration
 ip dhcp excluded-address <EXCLUDED_RANGE_1_START> <EXCLUDED_RANGE_1_END>
 ip dhcp excluded-address <EXCLUDED_RANGE_2_START> <EXCLUDED_RANGE_2_END>
 ip dhcp excluded-address <EXCLUDED_RANGE_3_START> <EXCLUDED_RANGE_3_END>
@@ -76,51 +90,4 @@ ip dhcp pool <POOL_B_PHONE>
 ip dhcp pool <POOL_WIFI>
  network <NETWORK_WIFI> <SUBNET_WIFI>
  default-router <DEFAULT_ROUTER_WIFI>
- dns-server <DNS_SERVER>
- domain-name <DOMAIN_NAME>
-
-ip domain name <DOMAIN_NAME>
-ip name-server <DNS_SERVER_IP>
-
-ntp authentication-key <KEY_ID> md5 <SECRET>
-ntp trusted-key <KEY_ID>
-ntp server <NTP_SERVER_IP> key <KEY_ID>
-
-snmp-server community <SNMP_COMMUNITY> ro
-logging <LOGGING_SERVER_IP>
-logging trap debugging
-logging buffered 8192
-
-crypto key generate rsa
- <KEY_SIZE>
-ip ssh version 2
-
-access-list <ACL_ID> permit <NETWORK> <WILDCARD_MASK>
-
-line vty 0 15
- access-class <ACL_ID> in
- transport input ssh
- login local
- logging synchronous
-
-no cdp run
-lldp run
-
-ipv6 unicast-routing
-
-interface g0/0/0
- ipv6 address <IPv6_ADDRESS_1> <PREFIX_LENGTH>
-
-interface g0/1/0
- ipv6 address <IPv6_ADDRESS_2> <PREFIX_LENGTH>
-
-interface g0/0
- ipv6 address <IPv6_NETWORK_1>::/64 eui-64
-
-interface g0/1
- ipv6 address <IPv6_NETWORK_2>::/64 eui-64
-
-
-
-
-
+ dns-se
