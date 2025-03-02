@@ -12,7 +12,7 @@ If an interface is administratively down, enable it:
 
 Check if the default gateway is set
 
-show ip route
+    show ip route
 
 If missing, add it:
 
