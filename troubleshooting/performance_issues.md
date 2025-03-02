@@ -15,3 +15,4 @@ Monitor CPU usage
 
     show processes cpu sorted
 
+Due to Packet Tracer having limited commands, Screenshots for this command can not be provided
