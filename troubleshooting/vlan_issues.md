@@ -12,12 +12,15 @@ Diagnostic Steps & Fixes
 
     show vlan brief
   <img width="751" alt="image" src="https://github.com/user-attachments/assets/0f8f3afd-0fa8-42a2-9ebe-08561d3cbaf0" />
-  The problem we have here is interface f0/1 is missing from the PCs VLAN
+  The problem we have here is interface f0/1 is missing from the PCs VLAN, and int f0/2 is missing from the Phones and PCs VLAN
 
-  what we need to do is use these commands to add f0/1 to VLAN 10
+  what we need to do is use these commands to add f0/1 to VLAN 10, and then f0/2 to VLAN 10, and 20
 
     int f0/1
     switchport access vlan 20
+    int f0/2
+    switchport mode access
+    switchport access vlan 10
   <img width="663" alt="image" src="https://github.com/user-attachments/assets/c7373723-f06a-4e2c-b1b8-c925b0dae117" />
 
   when viewing the VLANS with show vlan brief, you can see that interface f0/1 in now in both VLAN 10 (PCs) and VLAN 20 (Phones)
