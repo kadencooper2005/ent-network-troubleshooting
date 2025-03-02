@@ -1,1 +1,99 @@
+! Security & User Authentication
+enable algorithm-type scrypt secret <ENABLE_SECRET>
+username <USERNAME> algorithm-type scrypt secret <USER_SECRET>
 
+line console 0
+ login local
+ exec-timeout 30
+ logging synchronous
+
+line vty 0 15
+ access-class 1 in
+ transport input ssh
+ login local
+ logging synchronous
+
+crypto key generate rsa
+ 4096
+ip ssh version 2
+access-list 1 permit <NETWORK> <WILDCARD_MASK>
+
+! IP Routing Configuration
+ip routing
+
+! Interface Configuration
+interface range g1/0/2-3
+ no switchport
+ channel-group 1 mode desirable
+
+interface port-channel 1
+ ip address <IP_ADDRESS_PO1> <SUBNET_MASK>
+
+interface g1/0/1
+ no switchport
+ ip address <IP_ADDRESS_1> <SUBNET_MASK>
+
+interface g1/1/1
+ no switchport
+ ip address <IP_ADDRESS_2> <SUBNET_MASK>
+
+interface g1/1/2
+ no switchport
+ ip address <IP_ADDRESS_3> <SUBNET_MASK>
+
+interface g1/1/3
+ no switchport
+ ip address <IP_ADDRESS_4> <SUBNET_MASK>
+
+interface g1/1/4
+ no switchport
+ ip address <IP_ADDRESS_5> <SUBNET_MASK>
+
+interface loopback 0
+ ip address <LOOPBACK_IP> <SUBNET_MASK>
+
+interface range g1/0/4-24
+ shutdown
+
+! OSPF Routing Configuration
+router ospf 1
+ router-id <ROUTER_ID>
+ passive-interface loopback 0
+ network <NETWORK_PO1> 0.0.0.0 area 0
+ network <NETWORK_1> 0.0.0.0 area 0
+ network <NETWORK_2> 0.0.0.0 area 0
+ network <NETWORK_3> 0.0.0.0 area 0
+ network <NETWORK_4> 0.0.0.0 area 0
+ network <NETWORK_5> 0.0.0.0 area 0
+ network <LOOPBACK_IP> 0.0.0.0 area 0
+
+interface range g1/0/1, g1/1/1-4
+ ip ospf network point-to-point
+
+! IPv6 Configuration
+ipv6 unicast-routing
+
+interface g1/0/1
+ ipv6 address <IPv6_NETWORK_1>::/64 eui-64
+
+interface port-channel 1
+ ipv6 enable
+
+! Management & Logging Configuration
+ip domain-name <DOMAIN_NAME>
+ip name-server <DNS_SERVER_IP>
+
+logging <LOGGING_SERVER_IP>
+logging trap debugging
+logging buffered 8192
+
+snmp-server community <SNMP_COMMUNITY> ro
+
+! NTP Configuration
+ntp authentication-key <KEY_ID> md5 <NTP_SECRET>
+ntp trusted-key <KEY_ID>
+ntp server <NTP_SERVER_IP> key <KEY_ID>
+
+! CDP & LLDP Configuration
+no cdp run
+lldp run
