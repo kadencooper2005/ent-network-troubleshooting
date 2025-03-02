@@ -30,7 +30,8 @@ Verify OSPF interfaces (on all OSPF-enabled devices)
     show ip ospf interface
 
 <img width="699" alt="image" src="https://github.com/user-attachments/assets/49fb1fdb-e20b-499f-8008-fbc48f0b843f" />
-here is a screenshot of the g1/1/3 interface in the correct area group after configuration
+
+here is a screenshot of the g1/1/3 interface in the correct area after configuration
 
 
 Check passive interfaces (on routers)
