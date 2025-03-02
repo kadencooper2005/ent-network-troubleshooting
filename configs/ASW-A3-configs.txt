@@ -1,1 +1,91 @@
+! Security & User Authentication
+enable secret <ENABLE_SECRET>
+username <USERNAME> secret <USER_SECRET>
 
+line console 0
+ login local
+ exec-timeout 30
+ logging synchronous
+
+line vty 0 15
+ access-class 1 in
+ transport input ssh
+ login local
+ logging synchronous
+
+crypto key generate rsa
+ 4096
+ip ssh version 2
+access-list 1 permit <NETWORK> <WILDCARD_MASK>
+
+! Network Infrastructure Configuration
+ip default-gateway <GATEWAY_IP>
+
+interface vlan 99
+ ip address <VLAN_IP> <SUBNET_MASK>
+
+interface range g0/1-2
+ switchport mode trunk
+ switchport nonegotiate
+ switchport trunk native vlan <NATIVE_VLAN>
+ switchport trunk allowed vlan <ALLOWED_VLANS>
+
+interface f0/1
+ switchport mode access
+ switchport nonegotiate
+ switchport access vlan <DATA_VLAN>
+ switchport voice vlan <VOICE_VLAN>
+
+interface range f0/2-24
+ shutdown
+
+! Spanning Tree Configuration
+interface f0/1
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+
+! DHCP Snooping & ARP Inspection
+ip dhcp snooping
+ip dhcp snooping vlan <VLAN_LIST>
+no ip dhcp snooping information option
+
+interface range g0/1-2
+ ip dhcp snooping trust
+
+interface f0/1
+ ip dhcp snooping limit rate 15
+
+ip arp inspection vlan <VLAN_LIST>
+ip arp inspection validate src-mac dst-mac ip
+
+interface range g0/1-2
+ ip arp inspection trust
+
+! Port Security
+interface f0/1
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ switchport port-security violation restrict
+
+! Management & Logging Configuration
+ip domain-name <DOMAIN_NAME>
+ip name-server <DNS_SERVER_IP>
+
+logging <LOGGING_SERVER_IP>
+logging trap debugging
+logging buffered 8192
+
+snmp-server community <SNMP_COMMUNITY> ro
+
+! NTP Configuration
+ntp authentication-key <KEY_ID> md5 <NTP_SECRET>
+ntp trusted-key <KEY_ID>
+ntp server <NTP_SERVER_IP> key <KEY_ID>
+
+! CDP & LLDP Configuration
+no cdp run
+lldp run
+
+interface f0/1
+ no lldp transmit
