@@ -1,1 +1,98 @@
+! Security & User Authentication
+enable algorithm-type scrypt secret <ENABLE_SECRET>
+username <USERNAME> algorithm-type scrypt secret <USER_SECRET>
 
+line console 0
+ login local
+ exec-timeout 30
+ logging synchronous
+
+line vty 0 15
+ access-class 1 in
+ transport input ssh
+ login local
+ logging synchronous
+
+crypto key generate rsa
+ 4096
+ip ssh version 2
+access-list 1 permit <NETWORK> <WILDCARD_MASK>
+
+! Trunk Port Configuration
+interface range g1/0/1-3
+ switchport mode trunk
+ switchport nonegotiate
+ switchport trunk native vlan <NATIVE_VLAN>
+ switchport trunk allowed vlan <ALLOWED_VLANS>
+
+interface port-channel 1
+ switchport mode trunk
+ switchport nonegotiate
+ switchport trunk native vlan <NATIVE_VLAN>
+ switchport trunk allowed vlan <ALLOWED_VLANS>
+
+! Shutdown Unused Interfaces
+interface range g1/0/6-24, g1/1/3-4
+ shutdown
+
+! Layer 3 Interface Configuration
+interface g1/1/1
+ no switchport
+ ip address <IP_ADDRESS_1> <SUBNET_MASK>
+
+interface g1/1/2
+ no switchport
+ ip address <IP_ADDRESS_2> <SUBNET_MASK>
+
+interface loopback 0
+ ip address <LOOPBACK_IP> <SUBNET_MASK>
+
+! OSPF Routing Configuration
+router ospf 1
+ router-id <ROUTER_ID>
+ passive-interface loopback0
+ passive-interface vlan 10
+ passive-interface vlan 20
+ passive-interface vlan 40
+ network <NETWORK_1> 0.0.0.0 area 0
+ network <NETWORK_2> 0.0.0.0 area 0
+ network <LOOPBACK_IP> 0.0.0.0 area 0
+ network <NETWORK_3> 0.0.0.0 area 0
+ network <NETWORK_4> 0.0.0.0 area 0
+ network <NETWORK_5> 0.0.0.0 area 0
+ network <NETWORK_6> 0.0.0.0 area 0
+
+interface range g1/1/1-2
+ ip ospf network point-to-point
+
+! DHCP Helper Configuration
+interface vlan 10
+ ip helper-address <DHCP_SERVER_IP>
+
+interface vlan 20
+ ip helper-address <DHCP_SERVER_IP>
+
+interface vlan 40
+ ip helper-address <DHCP_SERVER_IP>
+
+interface vlan 99
+ ip helper-address <DHCP_SERVER_IP>
+
+! Management & Logging Configuration
+ip domain-name <DOMAIN_NAME>
+ip name-server <DNS_SERVER_IP>
+
+logging <LOGGING_SERVER_IP>
+logging trap debugging
+logging buffered 8192
+
+snmp-server community <SNMP_COMMUNITY> ro
+
+! NTP Configuration
+ntp authentication-key <KEY_ID> md5 <NTP_SECRET>
+ntp trusted-key <KEY_ID>
+ntp server <NTP_SERVER_IP> key <KEY_ID>
+
+! CDP & LLDP Configuration
+no cdp run
+lldp run
