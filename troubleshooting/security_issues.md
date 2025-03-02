@@ -14,4 +14,4 @@ Diagnostic Steps & Fixes
 
 Remove blocked MAC address
 
-    clear port-security sticky interface <INTERFA
+    clear port-security sticky interface <INTERFACE>
