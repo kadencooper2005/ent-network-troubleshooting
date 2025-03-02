@@ -1,1 +1,19 @@
 
+### Basic Connectivity Checks
+ping <destination_IP>        # Test connectivity
+traceroute <destination_IP>  # Check path to the destination
+show ip interface brief      # Verify interface status and assigned IPs
+
+### VLAN & Switch Troubleshooting
+show vlan brief              # Display VLAN assignments
+show interfaces trunk        # Verify trunk links
+show spanning-tree           # Check STP status to avoid loops
+
+### Routing & ACL Debugging
+show ip route                # View routing table
+show ip bgp summary          # Verify BGP peering status
+show access-lists            # Display applied ACLs
+
+### Security & Logging
+show logging                 # View system logs
+show ip dhcp binding         # Verify assigned DHCP addresses
